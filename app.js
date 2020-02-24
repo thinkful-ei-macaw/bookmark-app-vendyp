@@ -27,17 +27,51 @@ const store = {
 // These functions return HTML templates 
 //bookmark is object...does not know what store object is!
 const generateInitialView = function(bookmark){
-  return `
-        <li>
-            <div class="space-between padding-element">
-                <p>${bookmark.title}</p>
-                <div class="align-stars"> 
-                  ${generateStarRating(bookmark.rating)}
-                </div>
-            </div>
-            <div>
-            </div>
-        </li>`;
+  return ` <h1>My Bookmarks</h1>
+  <section class="top-view top-buttons">
+          ${generateTopButtons()}
+  </section>
+  <section class="top-view">
+    <div class="container">
+      <ul id="title-list">
+      ${generateBookmarkItems(bookmark)}
+      </ul> 
+    </div>
+  </section> `;
+};
+
+const generateTopButtons = function(){
+  return `<div class="button-inline">
+    <button class="dropbtn leftbtn newBtn">
+    + New <i class="icon-bookmark"></i>
+    </button>
+  </div>
+  <div class="dropdown button-inline">
+    <button class="dropbtn">
+    Filter By: <i class="icon-caret-down"></i>
+    </button>
+    <div class="dropdown-content">
+    <a href="#">*****</a>
+    <a href="#">****</a>
+    <a href="#">***</a>
+    <a href="#">**</a>
+    <a href="#">*</a>
+    </div>
+  </div>`;
+};
+
+const generateBookmarkList = function(bookmark){
+  console.log(bookmark);
+  return `          <li>
+  <div class="space-between padding-element">
+      <p>${bookmark.title}</p>
+      <div class="align-stars"> 
+        ${generateStarRating(bookmark.rating)}
+      </div>
+  </div>
+  <div>
+  </div>
+</li>`;
 };
 const generateFilledStars = function(){
   return '<i class="icon-star"></i>';
@@ -68,7 +102,8 @@ const generateExpandedView = function(bookmark){
 };
 
 const generateCreatePage = function(){
-  return `    <section class="align-together">
+  return `    <h1>My Bookmarks</h1>
+  <section class="align-together">
   <div class="sizing">
       <form class="add-page">
           <label for="fname">Add new bookmark:</label><br>
@@ -101,9 +136,9 @@ const generateCreatePage = function(){
 // This function conditionally replaces the contents of the <main> tag based on the state of the store
 const render = function(){
   if(store.adding === false){
-    $('#title-list').html(generateBookmarkItems);
+    $('main').html(generateInitialView);
   } else{
-    $('#title-list').html(generateCreatePage);
+    $('main').html(generateCreatePage);
   }
 
 };
@@ -117,7 +152,7 @@ const render = function(){
 // These functions handle events (submit, click, etc)
 //get all bookmarks from store object
 const generateBookmarkItems = function(){
-  const items = store.bookmarks.map((item) => generateInitialView(item));
+  const items = store.bookmarks.map((item) => generateBookmarkList(item));
   return items.join('');
 };
 
