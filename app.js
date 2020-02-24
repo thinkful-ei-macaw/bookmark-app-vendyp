@@ -115,7 +115,7 @@ const generateCreatePage = function(){
         <input type="text" id="add-title" name="add-title" placeholder="Add title here"><br><i class="icon-pencil"></i>
         </div>
         <div class="choose-star flex-center">                
-          <input type="number" name="numberRating" placeholder="1-5 rating">
+          <input type="number" name="number-rating" id="number-rating" placeholder="1-5 rating">
         </div>
         <div class="flex-center">
           <label for="book-description"></label>
@@ -180,12 +180,20 @@ const addItemToBookmarkList = function (bookmarkName, ratingNum, urlName, descri
 
 
 const handleNewBookCreate = function () {
-  $('main').on('submit', '#create-btn', function (event) {
+  $('main').on('click', '#create-btn', function (event) {
     event.preventDefault();
-    const newItemName = $('#url-link').val();
+    const urlName = $('#url-link').val();
+    console.log(urlName);
+    const titleName = $('#add-title').val();
+    console.log(titleName);
+    const bookRating= $('#number-rating').val();
+    console.log(bookRating);
+    const bookDescription = $('.book-description').val();
+
     // $('.js-shopping-list-entry').val('');
-    // addItemToBookmarkList(newItemName);
-    // render();
+    addItemToBookmarkList(titleName, bookRating, urlName, bookDescription);
+    store.adding = false;
+    render();
   });
 };
 
@@ -212,6 +220,7 @@ const handleBookmarkList = function(){
   //function call event listeners here
   handleAddNewItemBtn();
   handleCancelBtn();
+  handleNewBookCreate();
 };
 
 // when the page loads, call `handleBookmarkList`
