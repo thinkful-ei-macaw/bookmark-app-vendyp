@@ -61,7 +61,7 @@ const generateTopButtons = function(){
 };
 
 const generateBookmarkList = function(bookmark){
-  console.log(bookmark);
+  // console.log(bookmark);
   return `          <li>
   <div class="space-between padding-element">
       <p>${bookmark.title}</p>
@@ -106,15 +106,16 @@ const generateCreatePage = function(){
   <section class="align-together">
   <div class="sizing">
       <form class="add-page">
-          <label for="fname">Add new bookmark:</label><br>
+          <label for="add-new-bookmark">Add new bookmark:</label><br>
           <input type="text" id="url-link" name="url-link" placeholder="Link here"><br>
       </form>  
       <div class="block">
         <div class ="align-icon align-center">
-          <p>Link Walkthrough</p><i class="icon-pencil"></i>
+        <label for="add-title">Title:</label>
+        <input type="text" id="add-title" name="add-title" placeholder="Add title here"><br><i class="icon-pencil"></i>
         </div>
         <div class="choose-star flex-center">                
-          <input type="number" name="numberRating">
+          <input type="number" name="numberRating" placeholder="1-5 rating">
         </div>
         <div class="flex-center">
           <label for="book-description"></label>
@@ -161,8 +162,6 @@ const generateStarRating = function(ratingNum){
   let starString = generateFilledStars();
 
   for(let i = 1; i < 5; i++){
-    //3
-    //i=4
     if(ratingNum > i){
       starString += generateFilledStars();
     } else{
@@ -173,27 +172,50 @@ const generateStarRating = function(ratingNum){
   return starString;
 };
 
+
 ///add item to bookmark list
 const addItemToBookmarkList = function (bookmarkName, ratingNum, urlName, descriptionDetails) {
   store.bookmarks.push({ id: cuid(), title: bookmarkName, rating: ratingNum, url: urlName, description: descriptionDetails, expanded: false });
 };
-//listen for click and update the store 
+
+
+const handleNewBookCreate = function () {
+  $('main').on('submit', '#create-btn', function (event) {
+    event.preventDefault();
+    const newItemName = $('#url-link').val();
+    // $('.js-shopping-list-entry').val('');
+    // addItemToBookmarkList(newItemName);
+    // render();
+  });
+};
+
+//listen for click to add new items and update the store 
 const handleAddNewItemBtn = function(){
-  $('.newBtn').on('click', function(){
+  $('main').on('click', '.newBtn', function(){
     store.adding = true;
     render();
   });
 };
+//listen for click for cancel btn
+const handleCancelBtn = function(){
+  $('main').on('click', '#cancel-btn', function(e){
+    e.preventDefault();
+    store.adding = false;
+    render();
+  });
+};
+
 
 /******* Main App Start *******/
 const handleBookmarkList = function(){
   render();
   //function call event listeners here
   handleAddNewItemBtn();
+  handleCancelBtn();
 };
 
 // when the page loads, call `handleBookmarkList`
-handleBookmarkList();
+$(handleBookmarkList);
 
 
 
