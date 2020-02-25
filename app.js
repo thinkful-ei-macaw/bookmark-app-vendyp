@@ -164,16 +164,17 @@ const render = function(){
 // These functions handle events (submit, click, etc)
 //get all bookmarks from store object and expand the view
 const generateBookmarkItems = function(){
-  // const bookmark = store.bookmarks.filter(x => x.rating >= store.rating);
-  // console.log(bookmark); //returns empty array
+ 
 
-  const items = store.bookmarks.map((item) => {
+  const items = store.bookmarks.filter(book=>book.rating >= store.filter).map((item) => {
     if(item.expanded === true){
       return generateExpandedView(item);
     } else{
       return generateBookmarkList(item);
     }  
   });
+
+
   return items.join('');
 };
 
@@ -211,8 +212,6 @@ const handleNewBookCreate = function () {
     }
     addItemToBookmarkList(titleName, bookRating, urlName, bookDescription);
     store.adding = false;
-
-    console.log(store);
     render();
   });
 };
@@ -250,17 +249,14 @@ const handleExpandedView = function(){
 const deleteBookmarkItem = function (bookID) {
   console.log(`Deleting with ${bookID}`);
   const index = store.bookmarks.findIndex(item => item.id === bookID);
-  // console.log(index);
   store.bookmarks.splice(index, 1);
-  // console.log(store.bookmarks.splice(index, 1));
 };
 
 const handleDeleteBookmark = function(){
   //only delete when in the expanded view
-  console.log('deleted item');
+
   $('main').on('click', '.icon-trash', function(){
     const bookID = $(this).closest('li').attr('data-id');
-    console.log(bookID);
     deleteBookmarkItem(bookID);
     render();
   });
@@ -269,11 +265,10 @@ const handleDeleteBookmark = function(){
 
 //actual logic for filtering ratings
 const handleFilterRatings = function(){
-  $('a').on('click',function(){
+  $('main').on('click', 'a', function(){
     const chosenRating = $(this).text();
-    console.log(chosenRating);
     store.filter = store.starRating[chosenRating];
-    console.log(store.filter);
+    render();
   });
 };
 
