@@ -20,7 +20,14 @@ const store = {
   
   adding: false,
   error: null,
-  filter: 0
+  filter: 0,
+  starRating: {
+    '*': 1,
+    '**': 2,
+    '***': 3,
+    '****': 4,
+    '*****': 5
+  }
 };
 
 /********** TEMPLATE GENERATION FUNCTIONS **********/
@@ -48,7 +55,7 @@ const generateTopButtons = function(){
     </button>
   </div>
   <div class="dropdown button-inline">
-    <button class="dropbtn">
+    <button class="dropbtn js-filter-drop">
     Filter By: <i class="icon-caret-down"></i>
     </button>
     <div class="dropdown-content">
@@ -108,7 +115,7 @@ const generateCreatePage = function(){
   <div class="sizing">
       <form class="add-page">
           <label for="add-new-bookmark">Add new bookmark:</label><br>
-          <input type="text" id="url-link" name="url-link" placeholder="Link here"><br>
+          <input type="url" id="url-link" name="url-link" placeholder="Link here"><br>
       </form>  
       <div class="block">
         <div class ="align-icon align-center">
@@ -144,7 +151,7 @@ const render = function(){
   }
 
   //function call event listeners here
-  // handleExpandedView();
+  //handleExpandedView();
 
 };
 
@@ -155,12 +162,13 @@ const render = function(){
 /********** EVENT HANDLER FUNCTIONS **********/
 
 // These functions handle events (submit, click, etc)
-//get all bookmarks from store object
+//get all bookmarks from store object and expand the view
 const generateBookmarkItems = function(){
-  console.log('choose template');
+  // const bookmark = store.bookmarks.filter(x => x.rating >= store.rating);
+  // console.log(bookmark); //returns empty array
+
   const items = store.bookmarks.map((item) => {
     if(item.expanded === true){
-      console.log(item.expanded);
       return generateExpandedView(item);
     } else{
       return generateBookmarkList(item);
@@ -201,7 +209,6 @@ const handleNewBookCreate = function () {
     if(urlName === '' || titleName === '' || bookRating === '' ||bookDescription === ''){
       throw new Error('Please fill out the fields with appropriate ');
     }
-    // $('.js-shopping-list-entry').val('');
     addItemToBookmarkList(titleName, bookRating, urlName, bookDescription);
     store.adding = false;
 
@@ -239,6 +246,39 @@ const handleExpandedView = function(){
   });
 };
 
+
+const deleteBookmarkItem = function (bookID) {
+  console.log(`Deleting with ${bookID}`);
+  const index = store.bookmarks.findIndex(item => item.id === bookID);
+  // console.log(index);
+  store.bookmarks.splice(index, 1);
+  // console.log(store.bookmarks.splice(index, 1));
+};
+
+const handleDeleteBookmark = function(){
+  //only delete when in the expanded view
+  console.log('deleted item');
+  $('main').on('click', '.icon-trash', function(){
+    const bookID = $(this).closest('li').attr('data-id');
+    console.log(bookID);
+    deleteBookmarkItem(bookID);
+    render();
+  });
+  
+};
+
+//actual logic for filtering ratings
+const handleFilterRatings = function(){
+  $('a').on('click',function(){
+    const chosenRating = $(this).text();
+    console.log(chosenRating);
+    store.filter = store.starRating[chosenRating];
+    console.log(store.filter);
+  });
+};
+
+
+
 /******* Main App Start *******/
 const handleBookmarkList = function(){
   render();
@@ -246,6 +286,8 @@ const handleBookmarkList = function(){
   handleCancelBtn();
   handleNewBookCreate();
   handleExpandedView();
+  handleFilterRatings();
+  handleDeleteBookmark();
 };
 
 // when the page loads, call `handleBookmarkList`
