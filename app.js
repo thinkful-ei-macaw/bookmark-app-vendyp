@@ -17,6 +17,7 @@ const store = {
       expanded: false
     } 
   ],
+  
   adding: false,
   error: null,
   filter: 0
@@ -62,7 +63,7 @@ const generateTopButtons = function(){
 
 const generateBookmarkList = function(bookmark){
   // console.log(bookmark);
-  return `          <li>
+  return `          <li data-id=${bookmark.id}>
   <div class="space-between padding-element">
       <p>${bookmark.title}</p>
       <div class="align-stars"> 
@@ -82,8 +83,8 @@ const generateUnfilledStars = function(){
 };
 
 const generateExpandedView = function(bookmark){
-  return `<li>
-    <div class="space-between border-bottom padding-element">
+  return `<li data-id=${bookmark.id}>
+    <div class="space-between padding-element">
     <p>${bookmark.title}</p>
     <p><i class="icon-trash"></i></p>
     </div>
@@ -93,7 +94,7 @@ const generateExpandedView = function(bookmark){
             <input class="visit-site" type="submit" value="Visit Site"/>
         </form>        
     </div>
-    <div class="border-bottom padding-element">
+    <div class="padding-element">
         <p>
             ${bookmark.description}
         </p>
@@ -142,6 +143,9 @@ const render = function(){
     $('main').html(generateCreatePage);
   }
 
+  //function call event listeners here
+  // handleExpandedView();
+
 };
 
 
@@ -153,7 +157,15 @@ const render = function(){
 // These functions handle events (submit, click, etc)
 //get all bookmarks from store object
 const generateBookmarkItems = function(){
-  const items = store.bookmarks.map((item) => generateBookmarkList(item));
+  console.log('choose template');
+  const items = store.bookmarks.map((item) => {
+    if(item.expanded === true){
+      console.log(item.expanded);
+      return generateExpandedView(item);
+    } else{
+      return generateBookmarkList(item);
+    }  
+  });
   return items.join('');
 };
 
@@ -183,16 +195,17 @@ const handleNewBookCreate = function () {
   $('main').on('click', '#create-btn', function (event) {
     event.preventDefault();
     const urlName = $('#url-link').val();
-    console.log(urlName);
     const titleName = $('#add-title').val();
-    console.log(titleName);
     const bookRating= $('#number-rating').val();
-    console.log(bookRating);
     const bookDescription = $('.book-description').val();
-
+    if(urlName === '' || titleName === '' || bookRating === '' ||bookDescription === ''){
+      throw new Error('Please fill out the fields with appropriate ');
+    }
     // $('.js-shopping-list-entry').val('');
     addItemToBookmarkList(titleName, bookRating, urlName, bookDescription);
     store.adding = false;
+
+    console.log(store);
     render();
   });
 };
@@ -213,14 +226,26 @@ const handleCancelBtn = function(){
   });
 };
 
+const handleExpandedView = function(){
+  $('main').on('click', 'li', function(){
+    const bookID = $(this).attr('data-id');
+    console.log(bookID);
+    for(let i = 0; i < store.bookmarks.length; i++){
+      if(store.bookmarks[i].id === bookID){
+        store.bookmarks[i].expanded = !store.bookmarks[i].expanded;
+      }
+    }
+    render();
+  });
+};
 
 /******* Main App Start *******/
 const handleBookmarkList = function(){
   render();
-  //function call event listeners here
   handleAddNewItemBtn();
   handleCancelBtn();
   handleNewBookCreate();
+  handleExpandedView();
 };
 
 // when the page loads, call `handleBookmarkList`
