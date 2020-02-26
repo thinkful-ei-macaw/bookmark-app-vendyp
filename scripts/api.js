@@ -1,3 +1,6 @@
+// import {addNotTrue} from './store.js';
+// import {render} from './app.js';
+
 const BASE_URL = 'https://thinkful-list-api.herokuapp.com/vprum';
 
 const listApiFetch = function (...args) {
@@ -39,24 +42,17 @@ const getItems = function () {
   return listApiFetch(`${BASE_URL}/bookmarks`);
 };
 
-// const createBookmark = function(){
-//   const bookmarkObj = JSON.stringify({ title: bookmarkName, rating: ratingNum, url: urlName, desc: descriptionDetails});
-//   fetch('https://thinkful-list-api.herokuapp.com/vprum/bookmarks', {
-//     method: 'POST',
-//     headers: { 'Content-Type': 'application/json' },
-//     body: bookmarkObj
-//   })
-//     .then(res => res.json())
-//     .then(data => {
-//       console.log(data);
-//       store.bookmarks.push(data);
-//       addNotTrue();
-//       render();
-//     })
-//     .catch(err => console.error(err.message));
-// };
+const createBookmark = function(bookmark){
+  const bookmarkObj = JSON.stringify(bookmark);
+  return listApiFetch(`${BASE_URL}/bookmarks`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: bookmarkObj
+  });
+};
 
 export default{
   listApiFetch,
-  getItems
+  getItems,
+  createBookmark
 };

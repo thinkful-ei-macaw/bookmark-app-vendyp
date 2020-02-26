@@ -1,5 +1,5 @@
-import {isUserAdding, filterBookmarks, addBookmark, addNotTrue, addIsTrue, setExpanded, deleteBookmark, setRatings} from './store.js';
-
+import {store, isUserAdding, filterBookmarks, addBookmark, addNotTrue, addIsTrue, setExpanded, deleteBookmark, setRatings} from './store.js';
+import api from './api.js';
 /********** TEMPLATE GENERATION FUNCTIONS **********/
 
 // These functions return HTML templates 
@@ -163,7 +163,7 @@ const addItemToBookmarkList = function (bookmark) {
 };
 
 
-const handleNewBookCreate = function () {
+const handleNewBookCreate = function (bookmark) {
   $('main').on('click', '#create-btn', function (event) {
     event.preventDefault();
     const urlName = $('#url-link').val();
@@ -171,8 +171,23 @@ const handleNewBookCreate = function () {
     const bookRating= $('#number-rating').val();
     const bookDescription = $('.book-description').val();
     if(urlName === '' || titleName === '' || bookRating === '' ||bookDescription === ''){
-      throw new TypeError('Please fill out the fields with appropriate ');
+      throw new TypeError('Please fill out the fields with appropriate values');
     }
+
+    api.createBookmark({url:urlName, title:titleName, rating:bookRating, desc:bookDescription})
+      .then((newBookmark) => {
+        addBookmark(newBookmark);
+        addNotTrue();
+        render();
+      })
+      .catch((error) => {
+        console.error(error);
+        //store.setError(error.message);
+        //renderError();
+      });
+
+
+
     addItemToBookmarkList(titleName, bookRating, urlName, bookDescription);
  
   });

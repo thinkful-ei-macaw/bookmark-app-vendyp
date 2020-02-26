@@ -1,24 +1,7 @@
 import {render} from './app.js';
+
 const store = {
-  bookmarks: [
-    // {
-    //   id: cuid(),
-    //   title: 'Title 1',
-    //   rating: 3,
-    //   url: 'http://www.title1.com',
-    //   desc: 'lorem ipsum dolor sit',
-    //   expanded: false
-    // },
-    // {
-    //   id: cuid(),
-    //   title: 'Title 2',
-    //   rating: 5,
-    //   url: 'http://www.title2.com',
-    //   desc: 'dolorum tempore deserunt',
-    //   expanded: false
-    // } 
-  ],
-    
+  bookmarks: [],  
   adding: false,
   error: null,
   filter: 0,
@@ -86,6 +69,7 @@ const setRatings = function(chosenRating){
 };
 
 export {
+  store,
   isUserAdding,
   filterBookmarks,
   addBookmark,
