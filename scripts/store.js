@@ -1,3 +1,4 @@
+import {render} from './app.js';
 const store = {
   bookmarks: [
     {
@@ -5,7 +6,7 @@ const store = {
       title: 'Title 1',
       rating: 3,
       url: 'http://www.title1.com',
-      description: 'lorem ipsum dolor sit',
+      desc: 'lorem ipsum dolor sit',
       expanded: false
     },
     {
@@ -13,7 +14,7 @@ const store = {
       title: 'Title 2',
       rating: 5,
       url: 'http://www.title2.com',
-      description: 'dolorum tempore deserunt',
+      desc: 'dolorum tempore deserunt',
       expanded: false
     } 
   ],
@@ -34,13 +35,35 @@ const store = {
 const isUserAdding = function(){
   return store.adding;
 };
+
 //give rating based on user selection
 const filterBookmarks = function(){
   return store.bookmarks.filter(book=>book.rating >= store.filter);
+
+  //fetch
+  //addbookmarks to the store
+  //filter
+  //render
 };
 
+
 const addBookmark = function(bookmarkName, ratingNum, urlName, descriptionDetails){
-  return store.bookmarks.push({ id: cuid(), title: bookmarkName, rating: ratingNum, url: urlName, description: descriptionDetails, expanded: false });
+  const bookmarkObj = JSON.stringify({ title: bookmarkName, rating: ratingNum, url: urlName, desc: descriptionDetails});
+  fetch('https://thinkful-list-api.herokuapp.com/vprum/bookmarks', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: bookmarkObj
+  })
+    .then(res => res.json())
+    .then(data => {
+      console.log(data);
+      store.bookmarks.push(data);
+      addNotTrue();
+      render();
+    })
+    .catch(err => console.error(err.message));
+
+  // return store.bookmarks.push({ id: cuid(), title: bookmarkName, rating: ratingNum, url: urlName, description: descriptionDetails, expanded: false });
 };
 //set if user is adding
 const addIsTrue = function(){

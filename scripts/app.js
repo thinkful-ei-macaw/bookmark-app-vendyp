@@ -71,7 +71,7 @@ const generateExpandedView = function(bookmark){
     </div>
     <div class="padding-element">
         <p>
-            ${bookmark.description}
+            ${bookmark.desc}
         </p>
     </div> 
     </li>`;
@@ -174,8 +174,7 @@ const handleNewBookCreate = function () {
       throw new TypeError('Please fill out the fields with appropriate ');
     }
     addItemToBookmarkList(titleName, bookRating, urlName, bookDescription);
-    addNotTrue();
-    render();
+ 
   });
 };
 
@@ -250,7 +249,7 @@ const handleBookmarkList = function(){
 };
 
 
-export{handleBookmarkList};
+export{handleBookmarkList, render};
 
 
 
