@@ -1,34 +1,4 @@
-const store = {
-  bookmarks: [
-    {
-      id: cuid(),
-      title: 'Title 1',
-      rating: 3,
-      url: 'http://www.title1.com',
-      description: 'lorem ipsum dolor sit',
-      expanded: false
-    },
-    {
-      id: cuid(),
-      title: 'Title 2',
-      rating: 5,
-      url: 'http://www.title2.com',
-      description: 'dolorum tempore deserunt',
-      expanded: false
-    } 
-  ],
-  
-  adding: false,
-  error: null,
-  filter: 0,
-  starRating: {
-    '*': 1,
-    '**': 2,
-    '***': 3,
-    '****': 4,
-    '*****': 5
-  }
-};
+import {isUserAdding, filterBookmarks, addBookmark, addNotTrue, addIsTrue, setExpanded, deleteBookmark, setRatings} from './store.js';
 
 /********** TEMPLATE GENERATION FUNCTIONS **********/
 
@@ -97,9 +67,7 @@ const generateExpandedView = function(bookmark){
     </div>
 
     <div class="flex-center">
-        <form action="${bookmark.url}">
-            <input class="visit-site" type="submit" value="Visit Site"/>
-        </form>        
+            <a class="visit-button" href="${bookmark.url}">Visit Site</a>     
     </div>
     <div class="padding-element">
         <p>
@@ -115,7 +83,7 @@ const generateCreatePage = function(){
   <div class="sizing">
       <form class="add-page">
           <label for="add-new-bookmark">Add new bookmark:</label><br>
-          <input type="url" id="url-link" name="url-link" placeholder="Link here"><br>
+          <input type="url" id="url-link" name="url-link" placeholder="Link here" required><br>
       </form>  
       <div class="block">
         <div class ="align-icon align-center">
@@ -144,14 +112,11 @@ const generateCreatePage = function(){
 
 // This function conditionally replaces the contents of the <main> tag based on the state of the store
 const render = function(){
-  if(store.adding === false){
-    $('main').html(generateInitialView);
-  } else{
+  if(isUserAdding()){
     $('main').html(generateCreatePage);
+  } else{
+    $('main').html(generateInitialView);
   }
-
-  //function call event listeners here
-  //handleExpandedView();
 
 };
 
@@ -164,9 +129,7 @@ const render = function(){
 // These functions handle events (submit, click, etc)
 //get all bookmarks from store object and expand the view
 const generateBookmarkItems = function(){
- 
-
-  const items = store.bookmarks.filter(book=>book.rating >= store.filter).map((item) => {
+  const items = filterBookmarks().map((item) => {
     if(item.expanded === true){
       return generateExpandedView(item);
     } else{
@@ -196,7 +159,7 @@ const generateStarRating = function(ratingNum){
 
 ///add item to bookmark list
 const addItemToBookmarkList = function (bookmarkName, ratingNum, urlName, descriptionDetails) {
-  store.bookmarks.push({ id: cuid(), title: bookmarkName, rating: ratingNum, url: urlName, description: descriptionDetails, expanded: false });
+  addBookmark(bookmarkName, ratingNum, urlName, descriptionDetails);
 };
 
 
@@ -208,10 +171,10 @@ const handleNewBookCreate = function () {
     const bookRating= $('#number-rating').val();
     const bookDescription = $('.book-description').val();
     if(urlName === '' || titleName === '' || bookRating === '' ||bookDescription === ''){
-      throw new Error('Please fill out the fields with appropriate ');
+      throw new TypeError('Please fill out the fields with appropriate ');
     }
     addItemToBookmarkList(titleName, bookRating, urlName, bookDescription);
-    store.adding = false;
+    addNotTrue();
     render();
   });
 };
@@ -219,7 +182,7 @@ const handleNewBookCreate = function () {
 //listen for click to add new items and update the store 
 const handleAddNewItemBtn = function(){
   $('main').on('click', '.newBtn', function(){
-    store.adding = true;
+    addIsTrue();
     render();
   });
 };
@@ -227,7 +190,7 @@ const handleAddNewItemBtn = function(){
 const handleCancelBtn = function(){
   $('main').on('click', '#cancel-btn', function(e){
     e.preventDefault();
-    store.adding = false;
+    addNotTrue();
     render();
   });
 };
@@ -236,11 +199,10 @@ const handleExpandedView = function(){
   $('main').on('click', 'li', function(){
     const bookID = $(this).attr('data-id');
     console.log(bookID);
-    for(let i = 0; i < store.bookmarks.length; i++){
-      if(store.bookmarks[i].id === bookID){
-        store.bookmarks[i].expanded = !store.bookmarks[i].expanded;
-      }
-    }
+
+    setExpanded(bookID)
+
+
     render();
   });
 };
@@ -248,8 +210,9 @@ const handleExpandedView = function(){
 
 const deleteBookmarkItem = function (bookID) {
   console.log(`Deleting with ${bookID}`);
-  const index = store.bookmarks.findIndex(item => item.id === bookID);
-  store.bookmarks.splice(index, 1);
+  deleteBookmark(bookID);
+
+  
 };
 
 const handleDeleteBookmark = function(){
@@ -267,7 +230,8 @@ const handleDeleteBookmark = function(){
 const handleFilterRatings = function(){
   $('main').on('click', 'a', function(){
     const chosenRating = $(this).text();
-    store.filter = store.starRating[chosenRating];
+    setRatings(chosenRating);
+   
     render();
   });
 };
@@ -285,8 +249,8 @@ const handleBookmarkList = function(){
   handleDeleteBookmark();
 };
 
-// when the page loads, call `handleBookmarkList`
-$(handleBookmarkList);
+
+export{handleBookmarkList};
 
 
 
