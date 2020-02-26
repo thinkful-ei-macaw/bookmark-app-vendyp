@@ -1,22 +1,22 @@
 import {render} from './app.js';
 const store = {
   bookmarks: [
-    {
-      id: cuid(),
-      title: 'Title 1',
-      rating: 3,
-      url: 'http://www.title1.com',
-      desc: 'lorem ipsum dolor sit',
-      expanded: false
-    },
-    {
-      id: cuid(),
-      title: 'Title 2',
-      rating: 5,
-      url: 'http://www.title2.com',
-      desc: 'dolorum tempore deserunt',
-      expanded: false
-    } 
+    // {
+    //   id: cuid(),
+    //   title: 'Title 1',
+    //   rating: 3,
+    //   url: 'http://www.title1.com',
+    //   desc: 'lorem ipsum dolor sit',
+    //   expanded: false
+    // },
+    // {
+    //   id: cuid(),
+    //   title: 'Title 2',
+    //   rating: 5,
+    //   url: 'http://www.title2.com',
+    //   desc: 'dolorum tempore deserunt',
+    //   expanded: false
+    // } 
   ],
     
   adding: false,
@@ -47,21 +47,8 @@ const filterBookmarks = function(){
 };
 
 
-const addBookmark = function(bookmarkName, ratingNum, urlName, descriptionDetails){
-  const bookmarkObj = JSON.stringify({ title: bookmarkName, rating: ratingNum, url: urlName, desc: descriptionDetails});
-  fetch('https://thinkful-list-api.herokuapp.com/vprum/bookmarks', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: bookmarkObj
-  })
-    .then(res => res.json())
-    .then(data => {
-      console.log(data);
-      store.bookmarks.push(data);
-      addNotTrue();
-      render();
-    })
-    .catch(err => console.error(err.message));
+const addBookmark = function(bookmark){
+  return store.bookmarks.push(bookmark);
 
   // return store.bookmarks.push({ id: cuid(), title: bookmarkName, rating: ratingNum, url: urlName, description: descriptionDetails, expanded: false });
 };
@@ -81,8 +68,18 @@ const setExpanded = function(bookID){
 };
 
 const deleteBookmark = function(bookID){
-  const index = store.bookmarks.findIndex(item => item.id === bookID);
-  store.bookmarks.splice(index, 1);
+
+  fetch('https://thinkful-list-api.herokuapp.com/vprum/bookmarks/' + bookID+ '/', {
+    method: 'DELETE',
+  })
+    .then(res => res.json())
+    .then(data => {
+      const index = store.bookmarks.findIndex(item => item.id === bookID);
+      store.bookmarks.splice(index, 1);
+      render();
+    })
+    .catch(err => console.error(err.message));
+  
 };
 const setRatings = function(chosenRating){
   store.filter = store.starRating[chosenRating];

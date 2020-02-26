@@ -158,8 +158,8 @@ const generateStarRating = function(ratingNum){
 
 
 ///add item to bookmark list
-const addItemToBookmarkList = function (bookmarkName, ratingNum, urlName, descriptionDetails) {
-  addBookmark(bookmarkName, ratingNum, urlName, descriptionDetails);
+const addItemToBookmarkList = function (bookmark) {
+  addBookmark(bookmark);
 };
 
 
@@ -199,7 +199,7 @@ const handleExpandedView = function(){
     const bookID = $(this).attr('data-id');
     console.log(bookID);
 
-    setExpanded(bookID)
+    setExpanded(bookID);
 
 
     render();
