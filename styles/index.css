@@ -1,14 +1,16 @@
-* {
-  font-family: 'Lacquer';
+body{
+  background-color: #EAC8CA;
 }
 .dropbtn {
     background-color: teal;
     color: white;
     padding: 16px;
     font-size: 16px;
-    border: none;
+    border: 1px solid black;
+    border-radius:5%;
     cursor: pointer;
     margin-left:5px;
+    font-family: 'Dosis';
   }
   
   .dropdown {
@@ -77,6 +79,8 @@
     padding-top: 3px;
     padding-bottom: 3px;
     cursor: pointer;
+    background-color: #A7A2A9;
+    font-family: 'Lacquer';
   }
 
   .space-between {
@@ -124,7 +128,10 @@
 
 .sizing {
 	border:1px solid black;
-	width:350px;
+  width:350px;
+  background-color: #A7A2A9;
+  font-family: 'Dosis';
+  font-size:16px;
 }
 
 #url-link {
@@ -182,8 +189,10 @@
   }
 
 li:hover {
-    background-color: peachpuff;
+    background-color: #17BEBB;
 }
 
 
- 
+ #number-rating{
+   width:30px;
+ }
