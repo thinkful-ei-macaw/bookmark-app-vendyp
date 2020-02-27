@@ -171,7 +171,7 @@ const handleNewBookCreate = function (bookmark) {
     const urlName = $('#url-link').val();
     const titleName = $('#add-title').val();
     const bookRating= $('#number-rating').val();
-    const bookDescription = $('.book-description').val();
+    const bookDescription = $('.book-description').val().replace(/</g, '&lt');
     // if(urlName === '' || titleName === '' || bookRating === '' ||bookDescription === ''){
     //   throw new TypeError('Please fill out the fields with appropriate values');
     // }
