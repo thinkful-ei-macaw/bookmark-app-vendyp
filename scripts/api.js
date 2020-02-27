@@ -1,5 +1,5 @@
-// import {addNotTrue} from './store.js';
-// import {render} from './app.js';
+import {store} from './store.js';
+import {render} from './app.js';
 
 const BASE_URL = 'https://thinkful-list-api.herokuapp.com/vprum';
 
@@ -51,8 +51,23 @@ const createBookmark = function(bookmark){
   });
 };
 
+const deleteSelected = function(bookID){
+
+  fetch('https://thinkful-list-api.herokuapp.com/vprum/bookmarks/' + bookID+ '/', {
+    method: 'DELETE',
+  })
+    .then(res => res.json())
+    .then(data => {
+      const index = store.bookmarks.findIndex(item => item.id === bookID);
+      store.bookmarks.splice(index, 1);
+      render();
+    })
+    .catch(err => console.error(err.message));
+};
+
 export default{
   listApiFetch,
   getItems,
-  createBookmark
+  createBookmark,
+  deleteSelected
 };

@@ -1,5 +1,8 @@
+* {
+  font-family: 'Lacquer';
+}
 .dropbtn {
-    background-color: #4CAF50;
+    background-color: teal;
     color: white;
     padding: 16px;
     font-size: 16px;
@@ -29,15 +32,15 @@
     display: block;
   }
   
-  .dropdown-content a:hover {background-color: #f1f1f1}
+  .dropdown-content a:hover {background-color: lightblue}
   
   .dropdown:hover .dropdown-content {
     display: block;
   }
   
-  .dropdown:hover .dropbtn {
+  /* .dropdown:hover .dropbtn {
     background-color: #3e8e41;
-  }
+  } */
 
   .button-inline{
       display:inline-block;
@@ -45,6 +48,7 @@
 
   h1 {
       text-align:center;
+      font-family: 'Yeon Sung';
   }
 
   .top-view{
@@ -72,6 +76,7 @@
   li{
     padding-top: 3px;
     padding-bottom: 3px;
+    cursor: pointer;
   }
 
   .space-between {
@@ -89,17 +94,19 @@
       justify-content: center;
   }
 
-  .visit-site{
-    background-color:gray; 
-    border: none;
+  .visit-button{
+    background-color: teal; 
+    border: 1px black solid;
     color: white;
-    padding: 15px 32px;
+    padding: 8px 20px;
     text-align: center;
     text-decoration: none;
     display: inline-block;
     font-size: 16px;
     margin-top:23px;
     margin-bottom:0;
+    border-radius: 5%;
+    font-family: 'Dosis';
   }
 
   .padding-element{
@@ -175,7 +182,7 @@
   }
 
 li:hover {
-    background-color: blue;
+    background-color: peachpuff;
 }
 
 

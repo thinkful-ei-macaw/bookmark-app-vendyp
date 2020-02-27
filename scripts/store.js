@@ -1,4 +1,4 @@
-import {render} from './app.js';
+import api from './api.js';
 
 const store = {
   bookmarks: [],  
@@ -22,18 +22,11 @@ const isUserAdding = function(){
 //give rating based on user selection
 const filterBookmarks = function(){
   return store.bookmarks.filter(book=>book.rating >= store.filter);
-
-  //fetch
-  //addbookmarks to the store
-  //filter
-  //render
 };
 
 
 const addBookmark = function(bookmark){
   return store.bookmarks.push(bookmark);
-
-  // return store.bookmarks.push({ id: cuid(), title: bookmarkName, rating: ratingNum, url: urlName, description: descriptionDetails, expanded: false });
 };
 //set if user is adding
 const addIsTrue = function(){
@@ -51,21 +44,15 @@ const setExpanded = function(bookID){
 };
 
 const deleteBookmark = function(bookID){
-
-  fetch('https://thinkful-list-api.herokuapp.com/vprum/bookmarks/' + bookID+ '/', {
-    method: 'DELETE',
-  })
-    .then(res => res.json())
-    .then(data => {
-      const index = store.bookmarks.findIndex(item => item.id === bookID);
-      store.bookmarks.splice(index, 1);
-      render();
-    })
-    .catch(err => console.error(err.message));
+  api.deleteSelected(bookID);
   
 };
 const setRatings = function(chosenRating){
   store.filter = store.starRating[chosenRating];
+};
+
+const setError = function(error){
+  store.error = error;
 };
 
 export {
@@ -77,5 +64,6 @@ export {
   addNotTrue,
   setExpanded,
   deleteBookmark,
-  setRatings
+  setRatings,
+  setError
 };

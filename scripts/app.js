@@ -1,4 +1,4 @@
-import {store, isUserAdding, filterBookmarks, addBookmark, addNotTrue, addIsTrue, setExpanded, deleteBookmark, setRatings} from './store.js';
+import {store, isUserAdding, filterBookmarks, addBookmark, addNotTrue, addIsTrue, setExpanded, deleteBookmark, setRatings, setError} from './store.js';
 import api from './api.js';
 /********** TEMPLATE GENERATION FUNCTIONS **********/
 
@@ -80,18 +80,20 @@ const generateExpandedView = function(bookmark){
 const generateCreatePage = function(){
   return `    <h1>My Bookmarks</h1>
   <section class="align-together">
-  <div class="sizing">
-      <form class="add-page">
+  <form id="js-create-form" class="sizing">
+      <div class="add-page">
           <label for="add-new-bookmark">Add new bookmark:</label><br>
-          <input type="url" id="url-link" name="url-link" placeholder="Link here" required><br>
-      </form>  
+          <input type="url" id="url-link" name="url-link" placeholder="http://www.exampleformat.com" required><br>
+          <p>${store.error ? store.error : ''}</p>
+      </div>  
       <div class="block">
         <div class ="align-icon align-center">
         <label for="add-title">Title:</label>
-        <input type="text" id="add-title" name="add-title" placeholder="Add title here"><br><i class="icon-pencil"></i>
+        <input type="text" id="add-title" required name="add-title" placeholder="Add title here"><br><i class="icon-pencil"></i>
         </div>
-        <div class="choose-star flex-center">                
-          <input type="number" name="number-rating" id="number-rating" placeholder="1-5 rating">
+        <div class="choose-star flex-center">   
+        <label for="number-rating">Choose Rating: </label>             
+          <input type="number" min="0" max="5" name="number-rating" id="number-rating" placeholder="1-5 rating" required>
         </div>
         <div class="flex-center">
           <label for="book-description"></label>
@@ -104,7 +106,7 @@ const generateCreatePage = function(){
         <button id="cancel-btn">cancel</button>
         <button id="create-btn">create</button>
       </div>
-  </div>
+  </form>
 </section>`;
 };
 
@@ -164,15 +166,15 @@ const addItemToBookmarkList = function (bookmark) {
 
 
 const handleNewBookCreate = function (bookmark) {
-  $('main').on('click', '#create-btn', function (event) {
+  $('main').on('submit', '#js-create-form', function (event) {
     event.preventDefault();
     const urlName = $('#url-link').val();
     const titleName = $('#add-title').val();
     const bookRating= $('#number-rating').val();
     const bookDescription = $('.book-description').val();
-    if(urlName === '' || titleName === '' || bookRating === '' ||bookDescription === ''){
-      throw new TypeError('Please fill out the fields with appropriate values');
-    }
+    // if(urlName === '' || titleName === '' || bookRating === '' ||bookDescription === ''){
+    //   throw new TypeError('Please fill out the fields with appropriate values');
+    // }
 
     api.createBookmark({url:urlName, title:titleName, rating:bookRating, desc:bookDescription})
       .then((newBookmark) => {
@@ -181,9 +183,8 @@ const handleNewBookCreate = function (bookmark) {
         render();
       })
       .catch((error) => {
-        console.error(error);
-        //store.setError(error.message);
-        //renderError();
+        setError(error.message);
+        render();
       });
 
 
@@ -212,21 +213,14 @@ const handleCancelBtn = function(){
 const handleExpandedView = function(){
   $('main').on('click', 'li', function(){
     const bookID = $(this).attr('data-id');
-    console.log(bookID);
-
     setExpanded(bookID);
-
-
     render();
   });
 };
 
 
 const deleteBookmarkItem = function (bookID) {
-  console.log(`Deleting with ${bookID}`);
   deleteBookmark(bookID);
-
-  
 };
 
 const handleDeleteBookmark = function(){
@@ -250,7 +244,9 @@ const handleFilterRatings = function(){
   });
 };
 
-
+// const handleValidationFields = function(){
+//   // $('main').on('click', )
+// };
 
 /******* Main App Start *******/
 const handleBookmarkList = function(){
